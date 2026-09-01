@@ -23,7 +23,8 @@ from django.conf import settings
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/accounts/', include('accounts.api_urls')),
-    path('accounts/', include('allauth.urls')),
+    path('api/events/', include('events.urls')),
+    path('api/guides/', include('guides.urls')),
 ]
 
 if settings.DEBUG:
