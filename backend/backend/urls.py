@@ -26,6 +26,9 @@ urlpatterns = [
     path('api/events/', include('events.urls')),
     path('api/guides/', include('guides.urls')),
     path('api/courses', include('courses.urls')),
+    path('api/', include('sitesettings.urls')),
+    path('api/managrments', include('managments.urls')),
+
 ]
 
 if settings.DEBUG:

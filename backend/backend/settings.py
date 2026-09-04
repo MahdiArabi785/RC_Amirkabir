@@ -60,6 +60,8 @@ INSTALLED_APPS = [
     'events',
     'guides',
     'courses',
+    'sitesettings',
+    'managements'
 ]
 
 SITE_ID = 1
