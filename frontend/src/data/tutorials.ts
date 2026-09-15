@@ -7,9 +7,9 @@ export const tutorials: Tutorial[] = [
     description:
       'در این آموزش با اصول اولیه طراحی رابط کاربری و تجربه کاربری آشنا می‌شوید.',
     type: 'طراحی UI/UX',
-    thumbnail: '/images/tutorials/ui-ux.jpg',
+    thumbnail: 'https://static.cdn.asset.aparat.com/avt/72559733-4592-l__5762.jpg',
     aparatUrl:
-      'https://www.aparat.com/video/video/embed/videohash/VIDEO_HASH_1',
+      'https://www.aparat.com/video/video/embed/videohash/ezb7d5d/vt/frame',
   },
   {
     id: 2,
@@ -17,9 +17,9 @@ export const tutorials: Tutorial[] = [
     description:
       'در این ویدئو ساختار کامپوننت‌ها و اصول اولیه React را بررسی می‌کنیم.',
     type: 'برنامه‌نویسی',
-    thumbnail: '/images/tutorials/react.jpg',
+    thumbnail: 'https://static.cdn.asset.aparat.com/avt/72559733-4592-l__5762.jpg',
     aparatUrl:
-      'https://www.aparat.com/video/video/embed/videohash/VIDEO_HASH_2',
+      'https://www.aparat.com/video/video/embed/videohash/ezb7d5d/vt/frame',
   },
   {
     id: 3,
@@ -27,9 +27,9 @@ export const tutorials: Tutorial[] = [
     description:
       'با انواع داده، Interface و قابلیت‌های مهم TypeScript آشنا شوید.',
     type: 'برنامه‌نویسی',
-    thumbnail: '/images/tutorials/typescript.jpg',
+    thumbnail: 'https://static.cdn.asset.aparat.com/avt/72559733-4592-l__5762.jpg',
     aparatUrl:
-      'https://www.aparat.com/video/video/embed/videohash/VIDEO_HASH_3',
+      'https://www.aparat.com/video/video/embed/videohash/ezb7d5d/vt/frame',
   },
   {
     id: 4,
@@ -37,9 +37,9 @@ export const tutorials: Tutorial[] = [
     description:
       'در این آموزش نحوه طراحی صفحات سازگار با موبایل و دسکتاپ را یاد می‌گیرید.',
     type: 'طراحی وب',
-    thumbnail: '/images/tutorials/responsive.jpg',
+    thumbnail: 'https://static.cdn.asset.aparat.com/avt/72559733-4592-l__5762.jpg',
     aparatUrl:
-      'https://www.aparat.com/video/video/embed/videohash/VIDEO_HASH_4',
+      'https://www.aparat.com/video/video/embed/videohash/ezb7d5d/vt/frame',
   },
   {
     id: 5,
@@ -47,9 +47,9 @@ export const tutorials: Tutorial[] = [
     description:
       'ساخت رابط کاربری سریع و استاندارد با استفاده از Bootstrap.',
     type: 'طراحی وب',
-    thumbnail: '/images/tutorials/bootstrap.jpg',
+    thumbnail: 'https://static.cdn.asset.aparat.com/avt/72559733-4592-l__5762.jpg',
     aparatUrl:
-      'https://www.aparat.com/video/video/embed/videohash/VIDEO_HASH_5',
+      'https://www.aparat.com/video/video/embed/videohash/ezb7d5d/vt/frame',
   },
   {
     id: 6,
@@ -57,9 +57,9 @@ export const tutorials: Tutorial[] = [
     description:
       'ساخت فرم‌های قابل کنترل و مدیریت ورودی‌های کاربر در React.',
     type: 'برنامه‌نویسی',
-    thumbnail: '/images/tutorials/react-form.jpg',
+    thumbnail: 'https://static.cdn.asset.aparat.com/avt/72559733-4592-l__5762.jpg',
     aparatUrl:
-      'https://www.aparat.com/video/video/embed/videohash/VIDEO_HASH_9',
+      'https://www.aparat.com/video/video/embed/videohash/ezb7d5d/vt/frame',
   },
   {
     id: 7,
@@ -67,9 +67,9 @@ export const tutorials: Tutorial[] = [
     description:
       'راه‌اندازی و توسعه پروژه‌های مدرن فرانت‌اند با Vite.',
     type: 'ابزارهای توسعه',
-    thumbnail: '/images/tutorials/vite.jpg',
+    thumbnail: 'https://static.cdn.asset.aparat.com/avt/72559733-4592-l__5762.jpg',
     aparatUrl:
-      'https://www.aparat.com/video/video/embed/videohash/VIDEO_HASH_7',
+      'https://www.aparat.com/video/video/embed/videohash/ezb7d5d/vt/frame',
   },
   {
     id: 8,
@@ -77,9 +77,9 @@ export const tutorials: Tutorial[] = [
     description:
       'در این آموزش با اصول انتخاب رنگ و ایجاد ترکیب‌های مناسب آشنا می‌شوید.',
     type: 'طراحی UI/UX',
-    thumbnail: '/images/tutorials/colors.jpg',
+    thumbnail: 'https://static.cdn.asset.aparat.com/avt/72559733-4592-l__5762.jpg',
     aparatUrl:
-      'https://www.aparat.com/video/video/embed/videohash/VIDEO_HASH_8',
+      'https://www.aparat.com/video/video/embed/videohash/ezb7d5d/vt/frame',
   },
   {
     id: 9,
@@ -87,9 +87,9 @@ export const tutorials: Tutorial[] = [
     description:
       'ساخت فرم‌های قابل کنترل و مدیریت ورودی‌های کاربر در React.',
     type: 'برنامه‌نویسی',
-    thumbnail: '/images/tutorials/react-form.jpg',
+    thumbnail: 'https://static.cdn.asset.aparat.com/avt/72559733-4592-l__5762.jpg',
     aparatUrl:
-      'https://www.aparat.com/video/video/embed/videohash/VIDEO_HASH_9',
+      'https://www.aparat.com/video/video/embed/videohash/ezb7d5d/vt/frame',
   },
   {
     id: 10,
@@ -97,9 +97,9 @@ export const tutorials: Tutorial[] = [
     description:
       'ساخت فرم‌های قابل کنترل و مدیریت ورودی‌های کاربر در React.',
     type: 'برنامه‌نویسی',
-    thumbnail: '/images/tutorials/react-form.jpg',
+    thumbnail: 'https://static.cdn.asset.aparat.com/avt/72559733-4592-l__5762.jpg',
     aparatUrl:
-      'https://www.aparat.com/video/video/embed/videohash/VIDEO_HASH_9',
+      'https://www.aparat.com/video/video/embed/videohash/ezb7d5d/vt/frame',
   },
   {
     id: 11,
@@ -107,9 +107,9 @@ export const tutorials: Tutorial[] = [
     description:
       'ساخت فرم‌های قابل کنترل و مدیریت ورودی‌های کاربر در React.',
     type: 'برنامه‌نویسی',
-    thumbnail: '/images/tutorials/react-form.jpg',
+    thumbnail: 'https://static.cdn.asset.aparat.com/avt/72559733-4592-l__5762.jpg',
     aparatUrl:
-      'https://www.aparat.com/video/video/embed/videohash/VIDEO_HASH_9',
+      'https://www.aparat.com/video/video/embed/videohash/ezb7d5d/vt/frame',
   },
   {
     id: 12,
@@ -117,9 +117,9 @@ export const tutorials: Tutorial[] = [
     description:
       'ساخت فرم‌های قابل کنترل و مدیریت ورودی‌های کاربر در React.',
     type: 'برنامه‌نویسی',
-    thumbnail: '/images/tutorials/react-form.jpg',
+    thumbnail: 'https://static.cdn.asset.aparat.com/avt/72559733-4592-l__5762.jpg',
     aparatUrl:
-      'https://www.aparat.com/video/video/embed/videohash/VIDEO_HASH_9',
+      'https://www.aparat.com/video/video/embed/videohash/ezb7d5d/vt/frame',
   },
   {
     id: 13,
@@ -127,8 +127,8 @@ export const tutorials: Tutorial[] = [
     description:
       'ساخت فرم‌های قابل کنترل و مدیریت ورودی‌های کاربر در React.',
     type: 'برنامه‌نویسی',
-    thumbnail: '/images/tutorials/react-form.jpg',
+    thumbnail: 'https://static.cdn.asset.aparat.com/avt/72559733-4592-l__5762.jpg',
     aparatUrl:
-      'https://www.aparat.com/video/video/embed/videohash/VIDEO_HASH_9',
+      'https://www.aparat.com/video/video/embed/videohash/ezb7d5d/vt/frame',
   },
 ];

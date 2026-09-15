@@ -29,11 +29,11 @@ function Header() {
               آموزش ها
             </Nav.Link>
 
-            <Nav.Link as={Link} to="/services">
+            <Nav.Link as={Link} to="/documents">
               مستندات
             </Nav.Link>
 
-            <Nav.Link as={Link} to="/contact">
+            <Nav.Link as={Link} to="/news">
              اخبار و فراخوان‌ها
             </Nav.Link>
 

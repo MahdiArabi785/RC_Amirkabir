@@ -3,6 +3,9 @@ import Header from './components/layout/Header';
 import Footer from './components/layout/Footer';
 import Home from './pages/Home';
 import TutorialsPage from './pages/Tutorials/TutorialsPage';
+import DocumentsPage from "./pages/Documents/DocumentsPage";
+import NewsPage from "./pages/News/NewsPage";
+import NewsDetailsPage from "./pages/News/NewsDetailsPage";
 
 
 function App() {
@@ -17,6 +20,9 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<div className="container py-5">صفحه درباره ما</div>} />
           <Route path="/tutorials" element={<TutorialsPage />} />
+          <Route path="/documents" element={<DocumentsPage />} />
+          <Route path="/news" element={<NewsPage />} />
+          <Route path="/news/:slug" element={<NewsDetailsPage />} />
           <Route path="/services" element={<div className="container py-5">صفحه خدمات</div>} />
           <Route path="/contact" element={<div className="container py-5">صفحه تماس با ما</div>} />
           <Route path="/login" element={<div className="container py-5">صفحه ورود</div>} />

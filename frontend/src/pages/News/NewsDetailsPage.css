@@ -1,0 +1,128 @@
+/* src/pages/News/NewsDetailsPage.css */
+
+.news-details-page {
+  padding: 48px 0;
+  background-color: #f8fafc;
+}
+
+.news-details-article {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 32px;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  background-color: #ffffff;
+}
+
+.news-details-back-link {
+  display: inline-block;
+  margin-bottom: 28px;
+  color: #2563eb;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.news-details-category {
+  display: inline-block;
+  margin-bottom: 12px;
+  color: #2563eb;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.news-details-title {
+  margin: 0 0 16px;
+  color: #172033;
+  font-size: 36px;
+  line-height: 1.6;
+}
+
+.news-details-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 28px;
+  color: #64748b;
+  font-size: 14px;
+}
+
+.news-details-image {
+  display: block;
+  width: 100%;
+  max-height: 460px;
+  margin-bottom: 32px;
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+.news-details-content {
+  color: #334155;
+  font-size: 17px;
+  line-height: 2.2;
+}
+
+.news-details-content p {
+  margin: 0 0 20px;
+}
+
+.news-details-tags {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid #e2e8f0;
+  color: #475569;
+}
+
+.news-details-tag {
+  padding: 5px 10px;
+  border-radius: 999px;
+  background-color: #eff6ff;
+  color: #2563eb;
+  font-size: 13px;
+}
+
+.news-details-not-found {
+  max-width: 600px;
+  margin: 80px auto;
+  padding: 48px 24px;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  background: #ffffff;
+  text-align: center;
+}
+
+.news-details-not-found h1 {
+  margin-bottom: 12px;
+  color: #172033;
+}
+
+.news-details-not-found p {
+  margin-bottom: 24px;
+  color: #64748b;
+}
+
+@media (max-width: 767px) {
+  .news-details-page {
+    padding: 32px 0;
+  }
+
+  .news-details-article {
+    padding: 20px;
+  }
+
+  .news-details-title {
+    font-size: 26px;
+  }
+
+  .news-details-meta {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .news-details-content {
+    font-size: 15px;
+  }
+}
