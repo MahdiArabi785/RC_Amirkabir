@@ -61,7 +61,8 @@ INSTALLED_APPS = [
     'guides',
     'courses',
     'sitesettings',
-    'managements'
+    'managements',
+    'drf_spectacular',
 ]
 
 SITE_ID = 1
@@ -104,6 +105,7 @@ REST_FRAMEWORK = {
         'rest_framework.parsers.MultiPartParser',
         'rest_framework.parsers.FormParser',
     ],
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
  
 # --- SimpleJWT ---

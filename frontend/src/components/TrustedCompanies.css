@@ -1,0 +1,143 @@
+/* TrustedCompanies.css */
+
+.trusted-companies-section {
+  width: 100%;
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+  overflow: hidden;
+  background-color: #ffffff;
+}
+
+/* عنوان بخش */
+.trusted-companies-section > .container {
+  margin-bottom: 2rem;
+}
+
+/* کانتینر شامل دو Marquee */
+.marquee-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/*
+  react-fast-marquee این کلاس‌ها را به‌صورت داخلی تولید می‌کند.
+  تعیین direction به ltr باعث می‌شود RTL صفحه روی محاسبات
+  حرکتی Marquee تأثیر منفی نگذارد.
+*/
+.marquee-container .rfm-marquee-container {
+  width: 100%;
+  overflow: hidden;
+  direction: ltr;
+  padding: 20px 0px;
+}
+
+/* نوار متحرک */
+.marquee-container .rfm-marquee {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  width: max-content;
+}
+
+/* کانتینر اولیه‌ی آیتم‌ها */
+.marquee-container .rfm-initial-child-container {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+}
+
+/* هر آیتمی که react-fast-marquee ایجاد می‌کند */
+.marquee-container .rfm-child {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+}
+
+/* کارت لوگو */
+.marquee-logo-card {
+  box-sizing: border-box;
+  flex: 0 0 150px;
+  width: 150px;
+  height: 100px;
+
+  margin: 0 8px;
+  padding: 5px 5px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+
+  box-shadow: 0 3px 10px rgba(15, 23, 42, 0.06);
+
+  user-select: none;
+  transition:
+    transform 0.25s ease,
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+/* تصویر لوگو */
+.marquee-logo-card img {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+
+  object-fit: contain;
+  filter: grayscale(100%);
+  opacity: 0.7;
+
+  transition:
+    filter 0.25s ease,
+    opacity 0.25s ease,
+    transform 0.25s ease;
+}
+
+/* افکت هاور */
+.marquee-logo-card:hover {
+  transform: translateY(-3px);
+  border-color: #cbd5e1;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.1);
+}
+
+.marquee-logo-card:hover img {
+  filter: grayscale(0%);
+  opacity: 1;
+  transform: scale(1.04);
+}
+
+/* تنظیمات موبایل */
+@media (max-width: 576px) {
+  .trusted-companies-section {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+  }
+
+  .marquee-container {
+    gap: 0.75rem;
+  }
+
+  .marquee-logo-card {
+    flex-basis: 145px;
+    width: 145px;
+    height: 68px;
+
+    margin: 0 6px;
+    padding: 8px 12px;
+    border-radius: 10px;
+  }
+}
+
+/* کاهش حرکت برای کاربرانی که این گزینه را در سیستم فعال کرده‌اند */
+@media (prefers-reduced-motion: reduce) {
+  .marquee-container .rfm-marquee {
+    animation-play-state: paused !important;
+  }
+}
