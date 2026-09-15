@@ -21,7 +21,12 @@ from django.conf.urls.static import static
 from django.conf import settings
 from drf_spectacular.views import (
     SpectacularAPIView,
+<<<<<<< HEAD
     SpectacularSwaggerView,
+=======
+    SpectacularSwaggerSplitView,
+    SpectacularRedocView,
+>>>>>>> 44e4d6d249acd928de89dc33d935cc8cf17b0b20
 )
 
 urlpatterns = [
@@ -32,8 +37,14 @@ urlpatterns = [
     path('api/courses/', include('courses.urls')),
     path('api/', include('sitesettings.urls')),
     path('api/managements/', include('managements.urls')),
+<<<<<<< HEAD
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
     path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
+=======
+    path('api/schema/',SpectacularAPIView.as_view(),name='schema'),
+    path('api/docs/', SpectacularSwaggerSplitView.as_view(url_name='schema'), name='swagger-ui'),
+    path('api/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
+>>>>>>> 44e4d6d249acd928de89dc33d935cc8cf17b0b20
 
 ]
 
