@@ -55,13 +55,15 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google',
     'rest_framework',
     'rest_framework_simplejwt',
+    'rest_framework_simplejwt.token_blacklist',
     'corsheaders',
     'django_filters',
     'events',
     'guides',
     'courses',
     'sitesettings',
-    'managements'
+    'managements',
+    'drf_spectacular',
 ]
 
 SITE_ID = 1
@@ -104,7 +106,7 @@ REST_FRAMEWORK = {
         'rest_framework.parsers.MultiPartParser',
         'rest_framework.parsers.FormParser',
     ],
-}
+    'DEFAULT_SCHEMA_CLASS':'drf_spectacular.openapi.AutoSchema'}
  
 # --- SimpleJWT ---
 
@@ -189,6 +191,30 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'RC_Amirkabir API',
+    'DESCRIPTION': 'مستندات API پروژه RC_Amirkabir - پلتفرم مدیریت محتوای علمی و پژوهشی',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+    'COMPONENT_SPLIT_REQUEST': True,
+    'SCHEMA_PATH_PREFIX': '/api/',
+    'SORT_OPERATIONS': False,
+    
+    # احراز هویت با JWT در Swagger
+    'SECURITY': [
+        {'jwtAuth': []},
+    ],
+    'APPEND_COMPONENTS': {
+        'securitySchemes': {
+            'jwtAuth': {
+                'type': 'http',
+                'scheme': 'bearer',
+                'bearerFormat': 'JWT',
+            }
+        }
+    },
+}
 # Internationalization
 # https://docs.djangoproject.com/en/6.1/topics/i18n/
 

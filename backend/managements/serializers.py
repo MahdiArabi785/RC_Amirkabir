@@ -23,6 +23,7 @@ User = get_user_model()
 
 # ==================== کاربران ====================
 class UserListSerializer(serializers.ModelSerializer):
+    """سریالایزر مختصر برای لیست کاربران"""
     full_name = serializers.CharField(source='get_full_name', read_only=True)
     role_display = serializers.CharField(source='get_role_display', read_only=True)
     is_admin = serializers.BooleanField(read_only=True)
@@ -38,6 +39,7 @@ class UserListSerializer(serializers.ModelSerializer):
 
 
 class UserDetailSerializer(serializers.ModelSerializer):
+    """سریالایزر کامل برای جزئیات کاربر"""
     full_name = serializers.CharField(source='get_full_name', read_only=True)
     role_display = serializers.CharField(source='get_role_display', read_only=True)
     is_admin = serializers.BooleanField(read_only=True)
@@ -55,8 +57,13 @@ class UserDetailSerializer(serializers.ModelSerializer):
 
 
 class UserCreateUpdateSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(write_only=True, required=False, min_length=8, allow_blank=True)
-    confirm_password = serializers.CharField(write_only=True, required=False, allow_blank=True)
+    """سریالایزر ایجاد و ویرایش کاربر با قابلیت تنظیم رمز"""
+    password = serializers.CharField(
+        write_only=True, required=False, min_length=8, allow_blank=True
+    )
+    confirm_password = serializers.CharField(
+        write_only=True, required=False, allow_blank=True
+    )
 
     class Meta:
         model = User
@@ -71,7 +78,9 @@ class UserCreateUpdateSerializer(serializers.ModelSerializer):
         password = attrs.get('password')
         confirm = attrs.get('confirm_password')
         if password and password != confirm:
-            raise serializers.ValidationError({"confirm_password": "رمز عبور و تکرار آن مطابقت ندارند."})
+            raise serializers.ValidationError({
+                "confirm_password": "رمز عبور و تکرار آن مطابقت ندارند."
+            })
         return attrs
 
     def create(self, validated_data):
@@ -98,9 +107,14 @@ class UserCreateUpdateSerializer(serializers.ModelSerializer):
 
 # ==================== مقالات (accounts) ====================
 class ArticleManagementSerializer(serializers.ModelSerializer):
+    """سریالایزر مدیریت مقالات"""
     authors_names = serializers.SerializerMethodField()
-    created_by_name = serializers.CharField(source='created_by.get_full_name', read_only=True)
-    status_display = serializers.CharField(source='get_status_display', read_only=True)
+    created_by_name = serializers.CharField(
+        source='created_by.get_full_name', read_only=True
+    )
+    status_display = serializers.CharField(
+        source='get_status_display', read_only=True
+    )
 
     class Meta:
         model = Article
@@ -111,14 +125,23 @@ class ArticleManagementSerializer(serializers.ModelSerializer):
         ]
         read_only_fields = ['id', 'created_by', 'created_at', 'updated_at']
 
-    def get_authors_names(self, obj):
-        return [author.get_full_name() or author.email for author in obj.authors.all()]
+    def get_authors_names(self, obj) -> list[str]:
+        """دریافت نام نویسندگان مقاله"""
+        return [
+            author.get_full_name() or author.email
+            for author in obj.authors.all()
+        ]
 
 
 # ==================== پروژه‌های تحقیقاتی (accounts) ====================
 class ResearchProjectManagementSerializer(serializers.ModelSerializer):
-    lead_name = serializers.CharField(source='lead.get_full_name', read_only=True)
-    status_display = serializers.CharField(source='get_status_display', read_only=True)
+    """سریالایزر مدیریت پروژه‌های تحقیقاتی"""
+    lead_name = serializers.CharField(
+        source='lead.get_full_name', read_only=True
+    )
+    status_display = serializers.CharField(
+        source='get_status_display', read_only=True
+    )
 
     class Meta:
         model = ResearchProject
@@ -128,24 +151,45 @@ class ResearchProjectManagementSerializer(serializers.ModelSerializer):
 
 # ==================== دوره‌ها (courses) ====================
 class CourseManagementSerializer(serializers.ModelSerializer):
-    teacher_name = serializers.CharField(source='teacher.get_full_name', read_only=True)
-    students_count = serializers.IntegerField(source='students.count', read_only=True)
-    videos_count = serializers.IntegerField(source='videos.count', read_only=True)
+    """
+    سریالایزر مدیریت دوره‌ها بر اساس مدل courses.models.Course.
+    
+    توجه: این مدل فقط شامل فیلدهای پایه دوره است (title, slug, description,
+    thumbnail, is_active) و ویدیوها از طریق رابطه `videos` متصل می‌شوند.
+    فیلدهای teacher, students, start_date, end_date در این مدل وجود ندارند
+    و صرفاً در نسخه‌ی ساده‌ی accounts.Course قابل استفاده بودند.
+    """
+    videos_count = serializers.IntegerField(
+        source='videos.count', read_only=True
+    )
+    thumbnail_url = serializers.SerializerMethodField()
 
     class Meta:
         model = Course  # از courses.models
         fields = [
-            'id', 'title', 'slug', 'description', 'thumbnail',
-            'teacher', 'teacher_name', 'students', 'students_count',
-            'videos_count', 'start_date', 'end_date',
-            'is_active', 'created_at', 'updated_at'
+            'id', 'title', 'slug', 'description',
+            'thumbnail', 'thumbnail_url',
+            'videos_count', 'is_active',
+            'created_at', 'updated_at',
         ]
-        read_only_fields = ['id', 'slug', 'created_at', 'updated_at']
+        read_only_fields = [
+            'id', 'slug', 'created_at', 'updated_at', 'videos_count'
+        ]
+
+    def get_thumbnail_url(self, obj) -> str | None:
+        """دریافت URL کامل تصویر بندانگشتی"""
+        request = self.context.get('request')
+        if obj.thumbnail and request:
+            return request.build_absolute_uri(obj.thumbnail.url)
+        return None
 
 
 # ==================== رویدادها (events) ====================
 class EventManagementSerializer(serializers.ModelSerializer):
-    event_type_display = serializers.CharField(source='get_event_type_display', read_only=True)
+    """سریالایزر مدیریت رویدادها"""
+    event_type_display = serializers.CharField(
+        source='get_event_type_display', read_only=True
+    )
     is_upcoming = serializers.SerializerMethodField()
 
     class Meta:
@@ -153,12 +197,16 @@ class EventManagementSerializer(serializers.ModelSerializer):
         fields = '__all__'
         read_only_fields = ['id', 'created_at', 'updated_at', 'view_count']
 
-    def get_is_upcoming(self, obj):
+    def get_is_upcoming(self, obj) -> bool:
+        """بررسی آینده بودن رویداد"""
         return obj.is_upcoming()
 
 
 class CallManagementSerializer(serializers.ModelSerializer):
-    call_type_display = serializers.CharField(source='get_call_type_display', read_only=True)
+    """سریالایزر مدیریت فراخوان‌ها"""
+    call_type_display = serializers.CharField(
+        source='get_call_type_display', read_only=True
+    )
     is_expired = serializers.SerializerMethodField()
 
     class Meta:
@@ -166,11 +214,13 @@ class CallManagementSerializer(serializers.ModelSerializer):
         fields = '__all__'
         read_only_fields = ['id', 'created_at', 'updated_at', 'view_count']
 
-    def get_is_expired(self, obj):
+    def get_is_expired(self, obj) -> bool:
+        """بررسی منقضی شدن فراخوان"""
         return obj.is_expired()
 
 
 class NewsManagementSerializer(serializers.ModelSerializer):
+    """سریالایزر مدیریت اخبار"""
     cover_image_url = serializers.SerializerMethodField()
 
     class Meta:
@@ -178,7 +228,8 @@ class NewsManagementSerializer(serializers.ModelSerializer):
         fields = '__all__'
         read_only_fields = ['id', 'created_at', 'updated_at', 'view_count']
 
-    def get_cover_image_url(self, obj):
+    def get_cover_image_url(self, obj) -> str | None:
+        """دریافت URL کامل تصویر شاخص خبر"""
         request = self.context.get('request')
         if obj.cover_image and request:
             return request.build_absolute_uri(obj.cover_image.url)
@@ -187,6 +238,7 @@ class NewsManagementSerializer(serializers.ModelSerializer):
 
 # ==================== راهنماها (guides) ====================
 class GuideManagementSerializer(serializers.ModelSerializer):
+    """سریالایزر مدیریت فایل‌های راهنما"""
     file_url = serializers.SerializerMethodField()
     file_size = serializers.SerializerMethodField()
 
@@ -196,15 +248,19 @@ class GuideManagementSerializer(serializers.ModelSerializer):
             'id', 'title', 'description', 'file', 'file_url', 'file_size',
             'is_active', 'download_count', 'uploaded_at', 'updated_at'
         ]
-        read_only_fields = ['id', 'download_count', 'uploaded_at', 'updated_at']
+        read_only_fields = [
+            'id', 'download_count', 'uploaded_at', 'updated_at'
+        ]
 
-    def get_file_url(self, obj):
+    def get_file_url(self, obj) -> str | None:
+        """دریافت URL کامل فایل راهنما"""
         request = self.context.get('request')
         if obj.file and request:
             return request.build_absolute_uri(obj.file.url)
         return None
 
-    def get_file_size(self, obj):
+    def get_file_size(self, obj) -> int | None:
+        """دریافت حجم فایل راهنما به بایت"""
         try:
             return obj.file.size if obj.file else 0
         except (FileNotFoundError, OSError):
@@ -213,6 +269,7 @@ class GuideManagementSerializer(serializers.ModelSerializer):
 
 # ==================== بنرها و تنظیمات سایت (sitesettings) ====================
 class BannerManagementSerializer(serializers.ModelSerializer):
+    """سریالایزر مدیریت بنرهای صفحه اصلی"""
     image_url = serializers.SerializerMethodField()
 
     class Meta:
@@ -220,7 +277,8 @@ class BannerManagementSerializer(serializers.ModelSerializer):
         fields = '__all__'
         read_only_fields = ['id', 'created_at']
 
-    def get_image_url(self, obj):
+    def get_image_url(self, obj) -> str | None:
+        """دریافت URL کامل تصویر بنر"""
         request = self.context.get('request')
         if obj.image and request:
             return request.build_absolute_uri(obj.image.url)
@@ -228,21 +286,27 @@ class BannerManagementSerializer(serializers.ModelSerializer):
 
 
 class SiteSettingsSerializer(serializers.ModelSerializer):
+    """سریالایزر تنظیمات کلی سایت"""
     logo_url = serializers.SerializerMethodField()
     favicon_url = serializers.SerializerMethodField()
 
     class Meta:
         model = SiteSettings
-        fields = ['site_name', 'tagline', 'logo', 'logo_url', 'favicon', 'favicon_url', 'updated_at']
+        fields = [
+            'site_name', 'tagline', 'logo', 'logo_url',
+            'favicon', 'favicon_url', 'updated_at'
+        ]
         read_only_fields = ['updated_at']
 
-    def get_logo_url(self, obj):
+    def get_logo_url(self, obj) -> str | None:
+        """دریافت URL کامل لوگو"""
         request = self.context.get('request')
         if obj.logo and request:
             return request.build_absolute_uri(obj.logo.url)
         return None
 
-    def get_favicon_url(self, obj):
+    def get_favicon_url(self, obj) -> str | None:
+        """دریافت URL کامل فاویکون"""
         request = self.context.get('request')
         if obj.favicon and request:
             return request.build_absolute_uri(obj.favicon.url)
@@ -251,8 +315,13 @@ class SiteSettingsSerializer(serializers.ModelSerializer):
 
 # ==================== لاگ و تنظیمات مدیریت ====================
 class ActivityLogSerializer(serializers.ModelSerializer):
-    user_name = serializers.CharField(source='user.get_full_name', read_only=True)
-    action_display = serializers.CharField(source='get_action_display', read_only=True)
+    """سریالایزر نمایش لاگ فعالیت‌ها"""
+    user_name = serializers.CharField(
+        source='user.get_full_name', read_only=True
+    )
+    action_display = serializers.CharField(
+        source='get_action_display', read_only=True
+    )
 
     class Meta:
         model = ActivityLog
@@ -261,6 +330,7 @@ class ActivityLogSerializer(serializers.ModelSerializer):
 
 
 class ManagementSettingSerializer(serializers.ModelSerializer):
+    """سریالایزر تنظیمات پنل مدیریت"""
     class Meta:
         model = ManagementSetting
         fields = ['id', 'key', 'value', 'description', 'updated_at']
