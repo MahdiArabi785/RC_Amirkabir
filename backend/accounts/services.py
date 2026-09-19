@@ -20,15 +20,9 @@ class OTPService:
 
         user = CustomUser.objects.filter(**lookup).first()
         if user is None:
-            # کاربر تازه: چون هیچ رمزی تعیین نشده، ورود او فقط از طریق OTP
-            # ممکن است. set_unusable_password صراحتاً این را ثبت می‌کند
-            # (قبلاً get_or_create با رمز خالی این کار را به‌طور ضمنی و
-            # مبهم انجام می‌داد).
             user = CustomUser(**lookup)
             user.set_unusable_password()
         elif user.otp_expiry and (OTP_VALIDITY - (user.otp_expiry - timezone.now())) < OTP_RESEND_COOLDOWN:
-            # جلوگیری از اسپم شدن ایمیل/پیامک با درخواست‌های پی‌درپی روی
-            # همان ایمیل/موبایل
             return user
 
         code = UserManager.generate_otp_code()
@@ -39,7 +33,6 @@ class OTPService:
         if is_email:
             send_mail('کد ورود', f'کد: {code}', settings.DEFAULT_FROM_EMAIL, [email_or_phone])
         else:
-            # TODO: اتصال سرویس واقعی پیامک
             print(f"SMS to {email_or_phone}: {code}")
         return user
 

@@ -11,10 +11,6 @@ User = get_user_model()
 
 
 class ActivityLog(models.Model):
-    """
-    ثبت تمام فعالیت‌های مدیریتی در پنل.
-    شامل عملیات CRUD، انتشار، مسدودیت، و سایر رویدادها.
-    """
     ACTION_CHOICES = (
         ('create', 'ایجاد'),
         ('update', 'ویرایش'),

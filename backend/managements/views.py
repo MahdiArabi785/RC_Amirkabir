@@ -37,9 +37,6 @@ from sitesettings.models import Banner, SiteSettings
 
 # ==================== 1. مدیریت کاربران (از accounts) ====================
 class UserViewSet(LoggingMixin, ApiResponseMixin, viewsets.ModelViewSet):
-    """
-    مدیریت کامل کاربران (CRUD، مسدودیت، ارتقا سطح، عملیات گروهی)
-    """
     queryset = User.objects.all().order_by('-date_joined')
     permission_classes = [IsAdmin]
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
@@ -47,14 +44,12 @@ class UserViewSet(LoggingMixin, ApiResponseMixin, viewsets.ModelViewSet):
     search_fields = ['email', 'full_name', 'phone']
     ordering_fields = ['date_joined', 'last_login', 'email']
     ordering = ['-date_joined']
-
     def get_serializer_class(self):
         if self.action == 'retrieve':
             return UserDetailSerializer
         if self.action in ['create', 'update', 'partial_update']:
             return UserCreateUpdateSerializer
         return UserListSerializer
-
     @action(detail=True, methods=['post'])
     def toggle_block(self, request, pk=None):
         """مسدود/رفع مسدودیت کاربر"""
@@ -65,10 +60,8 @@ class UserViewSet(LoggingMixin, ApiResponseMixin, viewsets.ModelViewSet):
         user.save()
         self.log_action('block' if not user.is_active else 'unblock', user)
         return Response(UserDetailSerializer(user).data)
-
     @action(detail=True, methods=['post'])
     def toggle_admin(self, request, pk=None):
-        """ارتقا/تنزل سطح دسترسی به ادمین"""
         user = self.get_object()
         if user == request.user:
             return Response({'detail': 'نمی‌توانید سطح دسترسی خودتان را تغییر دهید.'}, status=status.HTTP_400_BAD_REQUEST)
@@ -420,19 +413,13 @@ class ManagementSettingViewSet(viewsets.ModelViewSet):
 
 # ==================== 13. داشبورد آمار ====================
 class DashboardStatsView(generics.GenericAPIView):
-    """
-    آمار کلی سیستم برای داشبورد (با کش ۵ دقیقه‌ای)
-    """
     permission_classes = [IsAdmin]
-
     def get(self, request):
         cache_key = 'dashboard_stats'
         data = cache.get(cache_key)
-
         if data is None:
             now = timezone.now()
             week_ago = now - timedelta(days=7)
-
             data = {
                 # آمار کاربران
                 'total_users': User.objects.count(),
@@ -440,39 +427,21 @@ class DashboardStatsView(generics.GenericAPIView):
                 'blocked_users': User.objects.filter(is_active=False).count(),
                 'new_users_7d': User.objects.filter(date_joined__gte=week_ago).count(),
                 'admins_count': User.objects.filter(role='admin').count(),
-
-                # آمار مقالات
                 'total_articles': Article.objects.count(),
                 'published_articles': Article.objects.filter(status='published').count(),
                 'draft_articles': Article.objects.filter(status='draft').count(),
-
-                # آمار پروژه‌های تحقیقاتی
                 'total_research_projects': ResearchProject.objects.count(),
-
-                # آمار دوره‌ها (از courses)
                 'total_courses': Course.objects.count(),
                 'active_courses': Course.objects.filter(is_active=True).count(),
-
-                # آمار رویدادها
                 'total_events': Event.objects.count(),
                 'upcoming_events': Event.objects.filter(start_date__gte=now).count(),
-
-                # آمار فراخوان‌ها
                 'total_calls': Call.objects.count(),
                 'open_calls': Call.objects.filter(deadline__gte=now).count(),
-
-                # آمار اخبار
                 'total_news': News.objects.count(),
                 'published_news': News.objects.filter(is_published=True).count(),
-
-                # آمار راهنماها
                 'total_guides': Guide.objects.count(),
                 'total_downloads': Guide.objects.aggregate(Sum('download_count'))['download_count__sum'] or 0,
-
-                # آمار بنرها
                 'total_banners': Banner.objects.count(),
-
-                # داده‌های نمودار (۷ روز اخیر)
                 'chart_data': {
                     'labels': [(now - timedelta(days=i)).strftime('%Y-%m-%d') for i in range(6, -1, -1)],
                     'new_users': [

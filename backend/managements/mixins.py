@@ -9,8 +9,6 @@ from .models import ActivityLog
 
 
 class LoggingMixin:
-    """ثبت خودکار فعالیت‌ها در ActivityLog"""
-
     def log_action(self, action, instance=None, changes=None):
         if not self.request.user.is_authenticated:
             return
@@ -36,8 +34,6 @@ class LoggingMixin:
 
 
 class ApiResponseMixin:
-    """یکسان‌سازی پاسخ‌های API برای عملیات نوشتنی"""
-
     def get_serializer_errors(self, serializer):
         return {field: [str(e) for e in errors] for field, errors in serializer.errors.items()}
 

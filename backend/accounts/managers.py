@@ -6,13 +6,6 @@ from django.utils.translation import gettext_lazy as _
 
 
 class UserManager(BaseUserManager):
-    """Manager for CustomUser.
-
-    این تنها Manager معتبر مدل CustomUser است. قبلاً یک نسخه دیگر (و
-    ناسازگار) از همین کلاس داخل models.py هم تعریف شده بود که باعث می‌شد
-    منطق واقعی create_superuser/create_user هیچ‌وقت اجرا نشود. حالا فقط
-    همین‌جا تعریف می‌شود و models.py آن را import می‌کند.
-    """
 
     use_in_migrations = True
 
@@ -20,8 +13,6 @@ class UserManager(BaseUserManager):
         if not email:
             raise ValueError(_('The Email must be set'))
         email = self.normalize_email(email)
-        # رشته خالی را به None تبدیل می‌کنیم تا با unique=True روی phone تداخل نکند
-        # (چند کاربر با phone='' باعث خطای IntegrityError در unique constraint می‌شوند)
         phone = phone or None
         user = self.model(email=email, phone=phone, **extra_fields)
         if password:

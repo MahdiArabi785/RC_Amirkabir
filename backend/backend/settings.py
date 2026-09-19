@@ -115,7 +115,7 @@ SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
     'ROTATE_REFRESH_TOKENS': True,
-    'BLACKLIST_AFTER_ROTATION': True,  # نیازمند 'rest_framework_simplejwt.token_blacklist' در INSTALLED_APPS
+    'BLACKLIST_AFTER_ROTATION': True,  
 }
 
 SOCIALACCOUNT_PROVIDERS = {
@@ -201,7 +201,6 @@ SPECTACULAR_SETTINGS = {
     'SCHEMA_PATH_PREFIX': '/api/',
     'SORT_OPERATIONS': False,
     
-    # احراز هویت با JWT در Swagger
     'SECURITY': [
         {'jwtAuth': []},
     ],

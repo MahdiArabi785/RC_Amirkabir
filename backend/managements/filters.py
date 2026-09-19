@@ -22,7 +22,6 @@ User = get_user_model()
 
 
 class UserFilter(django_filters.FilterSet):
-    """فیلترهای مدیریت کاربران"""
     full_name = django_filters.CharFilter(field_name='full_name', lookup_expr='icontains')
     email = django_filters.CharFilter(field_name='email', lookup_expr='icontains')
     phone = django_filters.CharFilter(field_name='phone', lookup_expr='icontains')
@@ -38,7 +37,6 @@ class UserFilter(django_filters.FilterSet):
         fields = ['full_name', 'email', 'phone', 'role', 'is_active', 'is_verified']
 
     def search_filter(self, queryset, name, value):
-        """جستجوی ترکیبی در چند فیلد"""
         return queryset.filter(
             django_models.Q(full_name__icontains=value) |
             django_models.Q(email__icontains=value) |

@@ -3,41 +3,26 @@ from django.db import models
 
 
 class SiteSettings(models.Model):
-    """تنظیمات کلی سایت. این مدل singleton است - همیشه باید فقط یک
-    رکورد از آن وجود داشته باشد (لوگو/نام سایت چیزی نیست که چند نمونه
-    از آن معنا داشته باشد)."""
     site_name = models.CharField('نام سایت', max_length=100, blank=True)
     tagline = models.CharField('شعار/توضیح کوتاه', max_length=255, blank=True)
     logo = models.ImageField('لوگو', upload_to='site/logo/', blank=True, null=True)
     favicon = models.ImageField('فاوآیکون', upload_to='site/favicon/', blank=True, null=True)
     updated_at = models.DateTimeField('آخرین بروزرسانی', auto_now=True)
-
     class Meta:
         verbose_name = 'تنظیمات سایت'
         verbose_name_plural = 'تنظیمات سایت'
-
     def __str__(self):
         return self.site_name or 'تنظیمات سایت'
-
     def save(self, *args, **kwargs):
-        # الگوی singleton: pk همیشه 1 اجباری می‌شود تا حتی اگر کسی
-        # مستقیم از شل یا اسکریپت تلاش کند رکورد دوم بسازد، همان رکورد
-        # اول بازنویسی شود نه اینکه رکورد جدیدی اضافه شود.
         self.pk = 1
         super().save(*args, **kwargs)
-
     def delete(self, *args, **kwargs):
-        # حذف تنظیمات سایت معنا ندارد - همیشه باید یک رکورد وجود داشته باشد.
         pass
-
     @classmethod
     def load(cls):
         obj, _ = cls.objects.get_or_create(pk=1)
         return obj
-
-
 class Banner(models.Model):
-    """اسلایدهای بنر صفحه‌ی اصلی."""
     title = models.CharField('عنوان', max_length=200, blank=True)
     subtitle = models.CharField('زیرعنوان', max_length=300, blank=True)
     image = models.ImageField('تصویر', upload_to='site/banners/')
@@ -55,9 +40,7 @@ class Banner(models.Model):
         return self.title or f'بنر #{self.pk}'
 
     def save(self, *args, **kwargs):
-        # همان الگوی order خودکار که در اپ courses استفاده شد - اگر
-        # کسی ترتیب را دستی مشخص نکند (order=0 پیش‌فرض بماند)، بنر
-        # خودکار بعد از آخرین بنر موجود قرار می‌گیرد.
+  
         if self._state.adding and self.order == 0:
             last_order = Banner.objects.aggregate(models.Max('order'))['order__max']
             if last_order is not None:

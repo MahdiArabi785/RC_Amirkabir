@@ -6,13 +6,6 @@ UserModel = get_user_model()
 
 
 class EmailOrPhoneBackend(ModelBackend):
-    """احراز هویت با ایمیل یا شماره موبایل به‌جای username.
-
-    نکته امنیتی: در صورت نبودن کاربر، عمداً set_password روی یک نمونه‌ی
-    خالی از مدل فراخوانی می‌شود تا زمان پاسخ‌دهی صرف‌نظر از وجود یا عدم
-    وجود کاربر تقریباً یکسان بماند (جلوگیری از حمله‌ی user enumeration
-    مبتنی بر timing). این رفتار حفظ شده است.
-    """
 
     def authenticate(self, request, username=None, password=None, **kwargs):
         if username is None:

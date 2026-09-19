@@ -27,9 +27,7 @@ class Course(models.Model):
         return self.title
 
     def save(self, *args, **kwargs):
-        # قبلاً اگر دو دوره عنوان یکسان داشتند (مثلاً هردو "مقدماتی")،
-        # slugify هر دو مقدار یکسانی تولید می‌کرد و چون slug یکتا
-        # (unique=True) است، ذخیره‌ی دومی با IntegrityError کرش می‌کرد.
+
         if not self.slug:
             base_slug = slugify(self.title, allow_unicode=True)
             slug_candidate = base_slug

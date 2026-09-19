@@ -11,8 +11,6 @@ MAX_GUIDE_FILE_SIZE_MB = 25
 
 
 def validate_guide_file_size(file):
-    # قبلاً هیچ محدودیتی روی حجم فایل آپلودی وجود نداشت - یک فایل چندگیگابایتی
-    # هم بدون خطا پذیرفته می‌شد (ریسک پر شدن دیسک سرور).
     limit_bytes = MAX_GUIDE_FILE_SIZE_MB * 1024 * 1024
     if file.size > limit_bytes:
         raise ValidationError(f'حجم فایل نباید بیشتر از {MAX_GUIDE_FILE_SIZE_MB} مگابایت باشد.')
@@ -24,10 +22,6 @@ class Guide(models.Model):
     file = models.FileField(
         upload_to='guides/%Y/%m/%d/',
         verbose_name="فایل",
-        # قبلاً هیچ محدودیتی روی نوع فایل نبود - هر پسوندی (حتی .exe یا
-        # .php) قابل آپلود بود. چون این validator روی خود فیلد مدل است،
-        # DRF هم به‌صورت خودکار همین اعتبارسنجی را در سریالایزر اعمال
-        # می‌کند (نیازی به تکرارش در serializers.py نیست).
         validators=[
             FileExtensionValidator(allowed_extensions=ALLOWED_GUIDE_EXTENSIONS),
             validate_guide_file_size,
@@ -37,7 +31,6 @@ class Guide(models.Model):
     download_count = models.PositiveIntegerField(default=0, verbose_name="تعداد دانلود")
     uploaded_at = models.DateTimeField(auto_now_add=True, verbose_name="تاریخ آپلود")
     updated_at = models.DateTimeField(auto_now=True, verbose_name="تاریخ بروزرسانی")
-
     class Meta:
         ordering = ['-uploaded_at']
         verbose_name = "راهنما"
