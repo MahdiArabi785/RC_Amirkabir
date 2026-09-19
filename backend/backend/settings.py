@@ -106,7 +106,12 @@ REST_FRAMEWORK = {
         'rest_framework.parsers.MultiPartParser',
         'rest_framework.parsers.FormParser',
     ],
+<<<<<<< HEAD
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+=======
     'DEFAULT_SCHEMA_CLASS':'drf_spectacular.openapi.AutoSchema'}
+>>>>>>> 44e4d6d249acd928de89dc33d935cc8cf17b0b20
  
 # --- SimpleJWT ---
 

@@ -1,0 +1,136 @@
+.tutorial-card {
+  height: 100%;
+
+  display: flex;
+  flex-direction: column;
+
+  overflow: hidden;
+
+  background-color: #ffffff;
+  border: 1px solid #e9ecef;
+  border-radius: 14px;
+
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.06);
+
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.tutorial-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+
+.tutorial-card-video {
+  position: relative;
+
+  display: block;
+
+  width: 100%;
+  padding: 0;
+
+  overflow: hidden;
+
+  border: 0;
+  background: transparent;
+
+  cursor: pointer;
+}
+
+.tutorial-card-thumbnail {
+  display: block;
+
+  width: 100%;
+  aspect-ratio: 16 / 9;
+
+  object-fit: cover;
+
+  transition: transform 0.3s ease;
+}
+
+.tutorial-card-video:hover .tutorial-card-thumbnail {
+  transform: scale(1.05);
+}
+
+.tutorial-card-play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 52px;
+  height: 52px;
+
+  color: #ffffff;
+
+  background-color: rgba(13, 110, 253, 0.92);
+  border-radius: 50%;
+
+  transform: translate(-50%, -50%);
+  transition:
+    transform 0.25s ease,
+    background-color 0.25s ease;
+}
+
+.tutorial-card-video:hover .tutorial-card-play {
+  background-color: #0b5ed7;
+  transform: translate(-50%, -50%) scale(1.1);
+}
+
+.tutorial-card-play i {
+  font-size: 1.8rem;
+  line-height: 1;
+}
+
+.tutorial-card-body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+
+  padding: 1rem;
+}
+
+.tutorial-card-title {
+  display: -webkit-box;
+  overflow: hidden;
+
+  margin: 0 0 0.5rem;
+
+  color: #212529;
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1.6;
+
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.tutorial-card-description {
+  display: -webkit-box;
+  overflow: hidden;
+
+  margin: 0 0 1rem;
+
+  color: #6c757d;
+  font-size: 0.9rem;
+  line-height: 1.8;
+
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+.tutorial-card-type {
+  align-self: flex-start;
+
+  padding: 0.3rem 0.65rem;
+
+  color: #0d6efd;
+  font-size: 0.78rem;
+
+  background-color: #eaf3ff;
+  border-radius: 999px;
+}
