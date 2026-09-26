@@ -26,7 +26,6 @@ const categoryLabels: Record<NewsCategory, string> = {
   event: "رویداد",
   announcement: "اطلاعیه",
   product: "محصول و خدمات",
-  education: "آموزش",
   report: "گزارش",
 };
 

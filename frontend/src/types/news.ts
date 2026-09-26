@@ -4,7 +4,6 @@ export type NewsCategory =
   | "event"
   | "announcement"
   | "product"
-  | "education"
   | "report";
 
 export interface NewsItem {

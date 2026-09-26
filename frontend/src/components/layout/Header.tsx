@@ -34,7 +34,7 @@ function Header() {
             </Nav.Link>
 
             <Nav.Link as={Link} to="/news">
-             اخبار و فراخوان‌ها
+             اخبار و رویدادها
             </Nav.Link>
 
             <Nav.Link as={Link} to="/about">

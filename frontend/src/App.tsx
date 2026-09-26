@@ -24,7 +24,11 @@ function App() {
           <Route path="/news" element={<NewsPage />} />
           <Route path="/news/:slug" element={<NewsDetailsPage />} />
           <Route path="/services" element={<div className="container py-5">صفحه خدمات</div>} />
-          <Route path="/contact" element={<div className="container py-5">صفحه تماس با ما</div>} />
+          <Route path="/contact" element={
+            <div className="container py-5">
+              صفحه تماس با ما
+            </div>
+          } />
           <Route path="/login" element={<div className="container py-5">صفحه ورود</div>} />
           <Route path="/register" element={<div className="container py-5">صفحه ثبت‌نام</div>} />
         </Routes>
