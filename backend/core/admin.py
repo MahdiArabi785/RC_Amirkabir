@@ -1,3 +1,2 @@
-from django.contrib import admin
-
-# Register your models here.
+﻿# core/admin.py
+# این app مدل ندارد؛ فایل صرفاً برای سازگاری با الگوی استاندارد است.

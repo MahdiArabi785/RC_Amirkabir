@@ -1,33 +1,25 @@
-# core/mixins.py
-"""
-Mixinهای مشترک برای مدل‌ها و viewها.
-"""
+﻿# core/mixins.py
+"""Mixinهای مشترک برای مدل‌ها."""
 import logging
 
-from django.db import transaction
-from django.db.models import F, Max
+from django.db import IntegrityError, transaction
+from django.db.models import F
 
 logger = logging.getLogger(__name__)
 
 
 class IncreaseCounterMixin:
-    """
-    برای مدل‌هایی که counter دارند (download_count/view_count).
-    افزایش اتمیک + refresh امن.
-
-    استفاده:
-        class Guide(IncreaseCounterMixin, models.Model):
-            counter_field = 'download_count'
-            download_count = models.PositiveIntegerField(default=0)
-
-        guide.increase_counter()  # به‌جای increase_download
-    """
+    """افزایش اتمیک counter_field."""
     counter_field = None
 
     def increase_counter(self):
         if not self.counter_field:
             raise NotImplementedError(
                 f"{type(self).__name__}.counter_field تعریف نشده است."
+            )
+        if self.pk is None:
+            raise ValueError(
+                f'{type(self).__name__} باید قبل از increase_counter ذخیره شود.'
             )
         updated = type(self).objects.filter(pk=self.pk).update(
             **{self.counter_field: F(self.counter_field) + 1}
@@ -41,31 +33,44 @@ class IncreaseCounterMixin:
 
 class AutoOrderMixin:
     """
-    برای مدل‌هایی که فیلد `order` دارند و اگر 0 بود، خودکار بعد از آخرین
-    رکورد قرار می‌گیرد. race-safe با transaction + select_for_update.
-
-    استفاده:
-        class Banner(AutoOrderMixin, models.Model):
-            order_field = 'order'
-            order = models.PositiveIntegerField(default=0)
+    اگر فیلد order صفر بود، خودکار بعد از آخرین رکورد قرار می‌گیرد.
+    پیش‌نیاز: مدل باید UniqueConstraint(fields=['order']) داشته باشد.
     """
     order_field = 'order'
+    order_max_retries = 3
+
+    def _next_order_value(self) -> int:
+        last = (
+            type(self).objects
+            .order_by(f'-{self.order_field}')
+            .values_list(self.order_field, flat=True)
+            .first()
+        )
+        return (last or 0) + 1
 
     def _assign_order_if_needed(self):
         if not self._state.adding:
             return
         if getattr(self, self.order_field, 0) != 0:
             return
-
-        # برای race safety
-        with transaction.atomic():
-            last = (
-                type(self).objects
-                .select_for_update()
-                .aggregate(Max(self.order_field))[f'{self.order_field}__max']
-            )
-            setattr(self, self.order_field, (last or 0) + 1)
+        setattr(self, self.order_field, self._next_order_value())
 
     def save(self, *args, **kwargs):
-        self._assign_order_if_needed()
-        super().save(*args, **kwargs)
+        if not self._state.adding or getattr(self, self.order_field, 0) != 0:
+            return super().save(*args, **kwargs)
+
+        last_exc = None
+        for attempt in range(self.order_max_retries):
+            self._assign_order_if_needed()
+            try:
+                with transaction.atomic():
+                    return super().save(*args, **kwargs)
+            except IntegrityError as exc:
+                last_exc = exc
+                logger.warning(
+                    'AutoOrderMixin: order conflict on %s (attempt %d/%d)',
+                    type(self).__name__, attempt + 1, self.order_max_retries,
+                )
+                setattr(self, self.order_field, 0)
+        if last_exc is not None:
+            raise last_exc

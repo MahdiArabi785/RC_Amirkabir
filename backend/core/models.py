@@ -1,3 +1,2 @@
-from django.db import models
-
-# Create your models here.
+﻿# core/models.py
+# این app مدل ندارد؛ فقط helper و mixin است.

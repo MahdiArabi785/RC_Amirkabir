@@ -16,8 +16,7 @@ class UserSerializer(serializers.ModelSerializer):
             'field_of_study', 'website', 'linkedin', 'google_scholar',
             'activity_logs_enabled',
         ]
-        # email و phone read-only: تغییرشان نیاز به flow جدا با verification دارد
-        read_only_fields = ['id', 'email', 'phone', 'role', 'is_admin', 'is_verified']
+        read_only_fields = ['id', 'role', 'is_admin', 'is_verified']
 
 
 class SendOTPSerializer(serializers.Serializer):
@@ -36,27 +35,14 @@ class VerifyOTPSerializer(serializers.Serializer):
 
 
 class SignupSerializer(serializers.ModelSerializer):
-    email = serializers.EmailField(required=True)
-    phone = serializers.CharField(required=False, allow_null=True, allow_blank=True)
     password = serializers.CharField(write_only=True, min_length=8)
 
     class Meta:
         model = CustomUser
         fields = ['email', 'phone', 'password']
 
-    def validate_email(self, value):
-        value = value.strip().lower()
-        if CustomUser.objects.filter(email__iexact=value).exists():
-            raise serializers.ValidationError('این ایمیل قبلاً ثبت شده است.')
-        return value
-
     def validate_phone(self, value):
-        if not value:
-            return None
-        value = value.strip()
-        if CustomUser.objects.filter(phone=value).exists():
-            raise serializers.ValidationError('این شماره قبلاً ثبت شده است.')
-        return value
+        return value or None
 
     def create(self, validated_data):
         password = validated_data.pop('password')
@@ -74,8 +60,8 @@ class LoginSerializer(serializers.Serializer):
     def validate(self, attrs):
         request = self.context.get('request')
         identifier = attrs['identifier'].strip()
-        # ← تغییر: همیشه username=identifier (backend خودش تشخیص می‌دهد)
-        user = authenticate(request, username=identifier, password=attrs['password'])
+        kwargs = {'email': identifier} if '@' in identifier else {'phone': identifier}
+        user = authenticate(request, password=attrs['password'], **kwargs)
         if user is None:
             raise serializers.ValidationError('اطلاعات وارد شده صحیح نیست.')
         if not user.is_active:
@@ -109,6 +95,8 @@ class PasswordResetRequestSerializer(serializers.Serializer):
 
 
 class PasswordResetConfirmSerializer(serializers.Serializer):
+    # چون API بی‌حالت است (بدون session)، برخلاف نسخه‌ی قدیمی یک مرحله‌ی
+    # verify جداگانه ندارد: ایمیل+کد+رمز جدید همزمان فرستاده می‌شود.
     email = serializers.EmailField()
     code = serializers.CharField(max_length=6, min_length=6)
     new_password = serializers.CharField(write_only=True, min_length=8)
@@ -128,7 +116,7 @@ class ArticleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Article
         fields = ['id', 'title', 'abstract', 'content', 'authors', 'created_by',
-                  'status', 'created_at', 'updated_at', 'published_at']
+                   'status', 'created_at', 'updated_at', 'published_at']
         read_only_fields = ['created_by', 'created_at', 'updated_at']
 
 
@@ -136,11 +124,11 @@ class CourseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Course
         fields = ['id', 'title', 'description', 'teacher', 'students',
-                  'start_date', 'end_date', 'is_active', 'created_at']
+                   'start_date', 'end_date', 'is_active', 'created_at']
 
 
 class ResearchProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = ResearchProject
         fields = ['id', 'title', 'description', 'lead', 'team_members', 'status',
-                  'budget', 'start_date', 'end_date', 'created_at']
+                   'budget', 'start_date', 'end_date', 'created_at']

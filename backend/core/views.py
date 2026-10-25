@@ -1,3 +1,2 @@
-from django.shortcuts import render
-
-# Create your views here.
+﻿# core/views.py
+# این app view ندارد؛ فقط helper و mixin است.

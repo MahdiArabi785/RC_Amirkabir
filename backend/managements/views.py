@@ -159,24 +159,8 @@ class ArticleViewSet(LoggingMixin, ApiResponseMixin, viewsets.ModelViewSet):
         Article.objects.filter(id__in=ids).delete()
         self.log_action('bulk_delete', None, {'deleted_count': count})
         return Response({'detail': f'{count} مقاله با موفقیت حذف شدند.'})
-    
 
-@action(detail=False, methods=['post'])
-def bulk_delete(self, request):
-    ids = request.data.get('ids', [])
-    if not ids:
-        return Response({'detail': 'هیچ کاربری انتخاب نشده است.'},
-                        status=status.HTTP_400_BAD_REQUEST)
-    # خود کاربر را از لیست حذف کن
-    ids = [i for i in ids if i != request.user.pk]
-    qs = User.objects.filter(id__in=ids)
-    # سوپریوزرها فقط توسط سوپریوزر حذف شوند
-    if not request.user.is_superuser:
-        qs = qs.filter(is_superuser=False)
-    count = qs.count()
-    qs.delete()
-    self.log_action('bulk_delete', None, {'deleted_count': count})
-    return Response({'detail': f'{count} کاربر حذف شدند.'})
+
 # ==================== 3. مدیریت پروژه‌های تحقیقاتی (از accounts) ====================
 class ResearchProjectViewSet(LoggingMixin, ApiResponseMixin, viewsets.ModelViewSet):
     """
@@ -479,4 +463,3 @@ class DashboardStatsView(generics.GenericAPIView):
             cache.set(cache_key, data, 300)
 
         return Response(data)
-    

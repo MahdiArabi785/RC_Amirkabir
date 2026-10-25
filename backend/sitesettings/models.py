@@ -1,5 +1,4 @@
 # sitesettings/models.py
-from django.core.exceptions import ValidationError
 from django.db import models
 
 
@@ -9,35 +8,20 @@ class SiteSettings(models.Model):
     logo = models.ImageField('لوگو', upload_to='site/logo/', blank=True, null=True)
     favicon = models.ImageField('فاوآیکون', upload_to='site/favicon/', blank=True, null=True)
     updated_at = models.DateTimeField('آخرین بروزرسانی', auto_now=True)
-
     class Meta:
         verbose_name = 'تنظیمات سایت'
         verbose_name_plural = 'تنظیمات سایت'
-        constraints = [
-            models.CheckConstraint(
-                condition=models.Q(pk=1),   # ← changed: check → condition
-                name='sitesettings_only_pk_1',
-            ),
-        ]
-
     def __str__(self):
         return self.site_name or 'تنظیمات سایت'
-
     def save(self, *args, **kwargs):
-        if self.pk not in (None, 1):
-            raise ValidationError("SiteSettings فقط با pk=1 مجاز است.")
         self.pk = 1
         super().save(*args, **kwargs)
-
     def delete(self, *args, **kwargs):
-        raise PermissionError("تنظیمات سایت singleton است و قابل حذف نیست.")
-
+        pass
     @classmethod
     def load(cls):
         obj, _ = cls.objects.get_or_create(pk=1)
         return obj
-
-
 class Banner(models.Model):
     title = models.CharField('عنوان', max_length=200, blank=True)
     subtitle = models.CharField('زیرعنوان', max_length=300, blank=True)
@@ -56,6 +40,7 @@ class Banner(models.Model):
         return self.title or f'بنر #{self.pk}'
 
     def save(self, *args, **kwargs):
+  
         if self._state.adding and self.order == 0:
             last_order = Banner.objects.aggregate(models.Max('order'))['order__max']
             if last_order is not None:
@@ -64,8 +49,12 @@ class Banner(models.Model):
 
 
 class Supporter(models.Model):
+    """لوگوی سازمان‌ها/نهادهایی که از ما حمایت می‌کنند - عمداً یک مدل
+    کاملاً جدا از SiteSettings.logo (لوگوی خود سایت). این دو مفهوم
+    متفاوتی هستند: یکی هویت بصری خود سایت است (تک‌مورد)، دیگری فهرستی
+    از حامیان بیرونی است (چندمورد، هرکدام با نام/لینک مخصوص به خودش)."""
     name = models.CharField('نام حامی', max_length=150)
-    logo = models.ImageField('لوگو', upload_to='site/supporters/', blank=True, null=True)
+    logo = models.ImageField('لوگو', upload_to='site/supporters/')
     website_url = models.URLField('لینک وبسایت', blank=True)
     order = models.PositiveIntegerField('ترتیب', default=0)
     is_active = models.BooleanField('فعال', default=True)

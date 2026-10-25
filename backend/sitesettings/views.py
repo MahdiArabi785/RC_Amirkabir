@@ -1,5 +1,4 @@
 # sitesettings/views.py
-from django.http import Http404
 from rest_framework import generics, viewsets
 
 from .models import Banner, SiteSettings, Supporter
@@ -8,26 +7,17 @@ from .serializers import BannerSerializer, SiteSettingsSerializer, SupporterSeri
 
 
 def _can_see_inactive(user):
-    return bool(
-        user
-        and user.is_authenticated
-        and getattr(user, 'is_admin', False)
-    )
+    return bool(user and user.is_authenticated and getattr(user, 'is_admin', user.is_staff))
 
 
 class SiteSettingsView(generics.RetrieveUpdateAPIView):
-    """تک شیء — GET بدون نوشتن DB."""
+    """تک شیء - همیشه همان رکورد singleton را برمی‌گرداند/ویرایش می‌کند،
+    بدون نیاز به id در URL (GET/PATCH /api/site/settings/)."""
     serializer_class = SiteSettingsSerializer
     permission_classes = [IsAdminOrReadOnly]
 
     def get_object(self):
-        # write: create if missing — read: 404 اگر نبود
-        if self.request.method in ('PUT', 'PATCH'):
-            return SiteSettings.load()
-        try:
-            return SiteSettings.objects.get(pk=1)
-        except SiteSettings.DoesNotExist:
-            raise Http404("تنظیمات سایت هنوز تنظیم نشده است.")
+        return SiteSettings.load()
 
 
 class BannerViewSet(viewsets.ModelViewSet):

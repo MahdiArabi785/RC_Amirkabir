@@ -1,12 +1,10 @@
 # sitesettings/urls.py
 from django.urls import include, path
-from rest_framework.routers import SimpleRouter
+from rest_framework.routers import DefaultRouter
 
 from .views import BannerViewSet, SiteSettingsView, SupporterViewSet
 
-app_name = 'sitesettings'   # ← اضافه شد
-
-router = SimpleRouter()
+router = DefaultRouter()
 router.register('banners', BannerViewSet, basename='banner')
 router.register('supporters', SupporterViewSet, basename='supporter')
 

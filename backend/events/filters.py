@@ -38,7 +38,7 @@ class EventFilter(filters.FilterSet):
         return queryset
 
 
-# events/filters.py — بخش CallFilter
+# -------------------- فیلتر فراخوان --------------------
 class CallFilter(filters.FilterSet):
     call_type = filters.CharFilter(field_name='call_type', lookup_expr='exact')
     is_published = filters.BooleanFilter()
@@ -51,8 +51,6 @@ class CallFilter(filters.FilterSet):
         fields = ['call_type', 'is_published']
 
     def filter_expired(self, queryset, name, value):
-        if value is True:
+        if value:
             return queryset.filter(deadline__lt=timezone.now())
-        if value is False:
-            return queryset.filter(deadline__gte=timezone.now())
-        return queryset  # ← فیلتر اعمال نشود، نه اینکه فقط بازها برگردند
+        return queryset.filter(deadline__gte=timezone.now())

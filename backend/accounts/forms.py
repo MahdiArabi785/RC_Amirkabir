@@ -39,14 +39,20 @@ class UserEditForm(forms.ModelForm):
         return self.cleaned_data.get('phone') or None
 
 
-# حذف UserEditForm و UserBlockForm.reason اگر واقعاً استفاده نمی‌شوند
-# یا اتصال UserBlockForm.reason به مدل/فرم
-
 class UserBlockForm(forms.ModelForm):
-    """فرم فقط برای تایید مسدودیت — تغییر is_active در view انجام می‌شود."""
+    """این فرم دیگر is_active را کنترل نمی‌کند (آن مقدار قبلاً به‌صورت
+    HiddenInput ارسال می‌شد که با بازکردن صفحه از دو تب یا زدن دکمه‌ی
+    Back مرورگر می‌توانست مقدار قدیمی/نادرست را دوباره submit کند). تغییر
+    وضعیت is_active مستقیماً در UserBlockView انجام می‌شود؛ این فرم فقط
+    برای ثبت دلیل مسدودیت است."""
+    reason = forms.CharField(
+        label='دلیل مسدودیت', widget=forms.Textarea(attrs={'rows': 3}), required=False,
+    )
+
     class Meta:
         model = CustomUser
         fields = ()
+
 
 class ProfileForm(forms.ModelForm):
     class Meta:
