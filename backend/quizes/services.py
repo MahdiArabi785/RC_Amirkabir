@@ -16,7 +16,8 @@
 import logging
 from datetime import timedelta
 from decimal import Decimal
-
+from django.db import transaction
+from django.core.exceptions import ValidationError as DjangoValidationError
 from django.db import transaction
 from django.utils import timezone
 from rest_framework.exceptions import PermissionDenied, ValidationError
@@ -270,13 +271,15 @@ def save_answer(
 
     max_mb = attempt.quiz.max_answer_file_size_mb
     for f in new_files:
-        validate_answer_file(f, max_mb)
+        try:
+            validate_answer_file(f, max_mb)
+        except DjangoValidationError as exc:
+            raise ValidationError({'detail': exc.messages})
 
     for f in new_files:
         AnswerAttachment.objects.create(answer=answer, file=f)
 
     return answer
-
 
 # =============================================================================
 # Public API — Finish

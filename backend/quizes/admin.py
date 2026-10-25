@@ -1,13 +1,6 @@
 # quizes/admin.py
 """
 Django admin registration برای quizes.
-
-نکته امنیتی:
-  - is_correct گزینه‌ها در Django admin قابل ویرایش است (مدیر مجاز).
-  - QuestionGrading برای تصحیح سریع در admin مفید است؛ ولی برای
-    گردش‌کار جامع از /api/managements/quiz-grading/ استفاده کنید.
-  - AnswerAttachment فایل اصلی را نشان می‌دهد — دسترسی admin Django
-    قبلاً محدود به is_staff است.
 """
 from django.contrib import admin
 
@@ -127,6 +120,19 @@ class QuestionAdmin(admin.ModelAdmin):
 
 
 # =============================================================================
+# QuestionOption — باید ثبت شود تا autocomplete_fields در AnswerAdmin کار کند
+# =============================================================================
+@admin.register(QuestionOption)
+class QuestionOptionAdmin(admin.ModelAdmin):
+    list_display = ['id', 'question', 'order', 'text', 'is_correct']
+    list_filter = ['is_correct']
+    search_fields = ['text']   # ← لازم برای autocomplete
+    autocomplete_fields = ['question']
+    ordering = ['question', 'order']
+    readonly_fields = []
+
+
+# =============================================================================
 # Attempt
 # =============================================================================
 @admin.register(QuizAttempt)
@@ -158,6 +164,7 @@ class AnswerAdmin(admin.ModelAdmin):
     ]
     list_filter = ['answered_at']
     search_fields = ['attempt__uuid', 'question__text_content']
+    # selected_option حالا با ثبت QuestionOptionAdmin قابل autocomplete است
     autocomplete_fields = ['attempt', 'question', 'selected_option']
     inlines = [AnswerAttachmentInline]
     readonly_fields = ['answered_at']

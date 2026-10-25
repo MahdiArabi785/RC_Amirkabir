@@ -285,8 +285,10 @@ class SaveAnswerTests(TestCase):
             save_answer(self.attempt, self.desc.id, files=[valid_pdf('b.pdf')])
 
     def test_save_after_deadline_fails(self):
+        past = timezone.now() - timedelta(minutes=10)
         QuizAttempt.objects.filter(pk=self.attempt.pk).update(
-            deadline_at=timezone.now() - timedelta(minutes=1),
+            started_at=past - timedelta(minutes=30),
+            deadline_at=past,
         )
         self.attempt.refresh_from_db()
         with self.assertRaises(ValidationError):
