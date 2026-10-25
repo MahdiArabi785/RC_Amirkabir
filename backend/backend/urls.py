@@ -41,6 +41,7 @@ urlpatterns = [
     path('api/schema/',SpectacularAPIView.as_view(),name='schema'),
     path('api/docs/', SpectacularSwaggerSplitView.as_view(url_name='schema'), name='swagger-ui'),
     path('api/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
+    path('api/quizes/', include('quizes.urls')),
 
 
 ]

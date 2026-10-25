@@ -95,6 +95,7 @@ INSTALLED_APPS = [
     'courses',
     'sitesettings',
     'managements',
+    'quizes', 
 ]
 
 MIDDLEWARE = [

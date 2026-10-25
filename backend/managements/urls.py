@@ -5,6 +5,7 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from .views import *
+from quizes.admin_views import *
 
 router = DefaultRouter()
 router.register(r'users', UserViewSet, basename='users')
@@ -18,6 +19,9 @@ router.register(r'guides', GuideViewSet, basename='guides')
 router.register(r'banners', BannerViewSet, basename='banners')
 router.register(r'activity-logs', ActivityLogViewSet, basename='activity-logs')
 router.register(r'management-settings', ManagementSettingViewSet, basename='management-settings')
+router.register(r'quizes', QuizAdminViewSet, basename='admin-quizes')
+router.register(r'quiz-questions', QuestionAdminViewSet, basename='admin-questions')
+router.register(r'quiz-grading', GradingAdminViewSet, basename='admin-grading')
 
 urlpatterns = [
     path('', include(router.urls)),
