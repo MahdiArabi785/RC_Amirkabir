@@ -1,15 +1,12 @@
-# =============================================================================
 # managements/signals.py
-# سیگنال‌ها برای ثبت خودکار رویدادها (اختیاری)
-# =============================================================================
-
-from django.db.models.signals import post_save, post_delete
-from django.dispatch import receiver
+"""
+سیگنال‌ها برای ثبت خودکار فعالیت‌های پرخطر.
+توجه: فقط فعالیت‌هایی که در Mixin ثبت نمی‌شوند اینجا مدیریت می‌شوند.
+"""
 from django.contrib.auth import get_user_model
-from accounts.models import Article, Course
-from events.models import Event, Call, News
-from guides.models import Guide
-from sitesettings.models import Banner
+from django.db.models.signals import post_delete, post_save
+from django.dispatch import receiver
+
 from .models import ActivityLog
 
 User = get_user_model()
@@ -17,21 +14,16 @@ User = get_user_model()
 
 @receiver(post_save, sender=User)
 def user_post_save(sender, instance, created, **kwargs):
+    """فقط ثبت ایجاد اولیه — block/promote در Mixin انجام می‌شود."""
     if created:
         ActivityLog.objects.create(
-            user=instance,
             action='create',
-            model_name='User',
-            object_id=str(instance.id),
-            object_repr=instance.email
+            model_name='user',
+            object_id=str(instance.pk),
+            object_repr=instance.email or str(instance.pk),
         )
 
 
-@receiver(post_delete, sender=Article)
-def article_post_delete(sender, instance, **kwargs):
-    ActivityLog.objects.create(
-        action='delete',
-        model_name='Article',
-        object_id=str(instance.id),
-        object_repr=instance.title
-    )
+# توجه: اگر LoggingMixin روی ArticleViewSet active است، اینجا تکرار نکنید.
+# برای جلوگیری از duplicate، از یک flag یا signal-level deduplication استفاده کنید.
+# در این نسخه، فقط log_action در Mixin انجام می‌شود و این سیگنال حذف شد.

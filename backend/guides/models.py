@@ -45,7 +45,11 @@ class Guide(models.Model):
         return os.path.basename(self.file.name) if self.file else ''
 
     def increase_download(self):
-        # افزایش اتمیک در سطح دیتابیس (نه read-then-write) تا زیر بار
-        # دانلود همزمان چندین کاربر، هیچ افزایشی گم نشود.
-        type(self).objects.filter(pk=self.pk).update(download_count=F('download_count') + 1)
-        self.refresh_from_db(fields=['download_count'])
+        updated = type(self).objects.filter(pk=self.pk).update(
+            download_count=F('download_count') + 1
+        )
+        if updated:
+            try:
+                self.refresh_from_db(fields=['download_count'])
+            except type(self).DoesNotExist:
+                pass
